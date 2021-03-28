@@ -70,4 +70,4 @@ app.get("/", (req, res) => {
  return res.send("Working");
 });
 
-app.listen(5000, () => console.log("server running"));
+app.listen(process.env.PORT || 5000, () => console.log("server running"));
