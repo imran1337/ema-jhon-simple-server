@@ -52,22 +52,37 @@ client.connect((err) => {
     });
   });
 
-  app.post('/submitOrder',(req,res) => {
-      const shipmentDetails =  req.body;
-      ordersCollection.insertOne(shipmentDetails).then(response => {
-          const {insertedCount} = response
-          if (insertedCount < 1) {
-            return  res.status(500).send({success:false,msg: 'Internal Server Error'})
-          }
-        return  res.status(200).send({success:true,msg:'Order placed Successfully'})
-      })
-  })
+  app.post("/submitOrder", (req, res) => {
+    const shipmentDetails = req.body;
+    ordersCollection.insertOne(shipmentDetails).then((response) => {
+      const { insertedCount } = response;
+      if (insertedCount < 1) {
+        return res
+          .status(500)
+          .send({ success: false, msg: "Internal Server Error" });
+      }
+      return res
+        .status(200)
+        .send({ success: true, msg: "Order placed Successfully" });
+    });
+  });
+
+  app.post("/searchProduct", (req, res) => {
+    const { searchValue } = req.body;
+    console.log(searchValue);
+    collection
+      .find({ name: { $regex: searchValue } })
+      .toArray((error, response) => {
+        console.log(response);
+        res.send(response);
+      });
+  });
 
   console.log("database connected");
 });
 
 app.get("/", (req, res) => {
- return res.send("Working");
+  return res.send("Working");
 });
 
 app.listen(process.env.PORT || 5000, () => console.log("server running"));
